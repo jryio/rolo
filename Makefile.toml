@@ -11,25 +11,72 @@ command = "cargo"
 args = ["make", "--list-all-steps", "--quiet"]
 
 # ------------------------
-# Local
+# Install
 # ------------------------
+[tasks.install]
+description = "Install dependencies"
+dependencies = ["install-tailwind"]
+
+[tasks.install-tailwind]
+description = "Install tailwindcss"
+dependencies = ["download-tailwlind", "chmod-tailwind", "rename-tailwind"]
+
+[tasks.download-tailwlind]
+command = "curl"
+args = [
+  "-sLO",
+  "https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-macos-arm64",
+]
+
+[tasks.chmod-tailwind]
+command = "chmod"
+args = ["+x", "tailwindcss-macos-arm64"]
+
+[tasks.rename-tailwind]
+command = "mv"
+args = ["tailwindcss-macos-arm64", "tailwindcss"]
+
+# ------------------------
+# Development
+# ------------------------
+[tasks.watch]
+description = "Watch mode development"
+run_task = { name = ["server-watch", "styles-watch"], parallel = true }
+
 [tasks.styles-watch]
+description = "Run tailwindcss in watch mode"
 command = "./tailwindcss"
 args = [
-  "-m",
-  "-c",
+  "--config",
   "tailwind.config.js",
-  "-i",
+  "--input",
   "static/input.css",
-  "-o",
+  "--output",
   "static/styles.css",
-  "-w",
-
+  "--watch",
 ]
 
 [tasks.server-watch]
 command = "cargo"
 args = ["watch", "-x", "r"]
 
-[tasks.watch]
-run_task = { name = ["server-watch", "styles-watch"], parallel = true }
+
+# ------------------------
+# Release
+# ------------------------
+[tasks.build]
+description = "Build for release"
+run_task = { name = ["styles", "server"] }
+
+[tasks.styles]
+description = "Build tailwindcss for release"
+command = "./tailwindcss"
+args = [
+  "--minify",
+  "--config",
+  "tailwind.config.js",
+  "--input",
+  "static/input.css",
+  "--output",
+  "static/styles.css",
+]
