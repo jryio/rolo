@@ -1,0 +1,35 @@
+[config]
+skip_core_tasks = true
+
+# ------------------------
+# HELP
+# ------------------------
+[tasks.help]
+category = "Help"
+description = "List all tasks"
+command = "cargo"
+args = ["make", "--list-all-steps", "--quiet"]
+
+# ------------------------
+# Local
+# ------------------------
+[tasks.styles-watch]
+command = "./tailwindcss"
+args = [
+  "-m",
+  "-c",
+  "tailwind.config.js",
+  "-i",
+  "static/input.css",
+  "-o",
+  "static/styles.css",
+  "-w",
+
+]
+
+[tasks.server-watch]
+command = "cargo"
+args = ["watch", "-x", "r"]
+
+[tasks.watch]
+run_task = { name = ["server-watch", "styles-watch"], parallel = true }

@@ -1,0 +1,17 @@
+[package]
+name = "rolo"
+version = "0.1.0"
+edition = "2021"
+authors = ["Jacob Young"]
+
+[dependencies]
+axum = { version = "0.7.2", features = ["macros"] }
+tokio = { version = "1.35.0", features = ["full"] }
+# Trying Maud on a forked branch that claims to support axum 0.7
+maud = { git = "https://github.com/vidhanio/maud.git", branch = "patch-1", features = [
+  "axum",
+] }
+tower = { version = "0.4", features = ["util"] }
+tower-http = { version = "0.5.0", features = ["fs", "trace"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
