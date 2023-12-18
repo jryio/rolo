@@ -24,3 +24,13 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 dotenvy = "0.15.7"
 erye = { package = "color-eyre", version = "0.6" }
+# For production we want to use tokio with RusTLS as our TLS library for full
+# static linking. The production image will be alpine, so our binary should be
+# fully statically linked
+sea-orm = { version = "0.12.10", features = [
+  "sqlx-sqlite",
+  "runtime-tokio-rustls",
+] }
+
+[dev-dependencies]
+test-case = "3.3.1"

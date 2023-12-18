@@ -1,4 +1,5 @@
 /target
+slim.report.json
 static/styles.css
 tailwindcss
 .env
