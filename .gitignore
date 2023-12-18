@@ -1,3 +1,7 @@
 /target
 static/styles.css
 tailwindcss
+.env
+env
+.env.dev
+env.dev

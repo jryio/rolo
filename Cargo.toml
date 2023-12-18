@@ -11,7 +11,16 @@ tokio = { version = "1.35.0", features = ["full"] }
 maud = { git = "https://github.com/vidhanio/maud.git", branch = "patch-1", features = [
   "axum",
 ] }
-tower = { version = "0.4", features = ["util"] }
+# "load-shed" provides load shedding to the services. "limit" provides
+# concurrent connect limiting to the services
+tower = { version = "0.4", features = [
+  "util",
+  "load-shed",
+  "limit",
+  "timeout",
+] }
 tower-http = { version = "0.5.0", features = ["fs", "trace"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+dotenvy = "0.15.7"
+erye = { package = "color-eyre", version = "0.6" }
