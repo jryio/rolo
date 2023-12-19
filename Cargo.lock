@@ -1646,6 +1646,7 @@ dependencies = [
  "axum",
  "color-eyre",
  "dotenvy",
+ "libsqlite3-sys",
  "maud",
  "sea-orm",
  "test-case",

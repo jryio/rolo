@@ -17,6 +17,8 @@ pub const RUN_MODE: &str = "RUN_MODE";
 pub const SERVER_DOMAIN: &str = "SERVER_DOMAIN";
 // The name of the environment variable to access the server's port
 pub const SERVER_PORT: &str = "SERVER_PORT";
+// The name of the environment variable to access the database connection
+pub const DATABASE_URL: &str = "DATABASE_URL";
 
 // --------------------------------
 // String values

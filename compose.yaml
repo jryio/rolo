@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  server:
+    container_name: rolo
+    env_file:
+      - .env.docker
+    environment:
+      RUST_LOG: debug
+      DATABASE_URL: "sqlite:///data/database.sqlite?mode=rwc"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - target: 8080
+        host_ip: 127.0.0.1
+        published: "8080"
+        protocol: tcp
+        mode: host
+    volumes:
+      - type: bind
+        source: ./db
+        target: /data

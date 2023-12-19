@@ -1,18 +1,26 @@
 mod consts;
 
 use axum::{
-    error_handling::HandleErrorLayer, http::StatusCode, response::IntoResponse, routing::get,
-    BoxError, Router,
+    error_handling::HandleErrorLayer, extract::State, http::StatusCode, response::IntoResponse,
+    routing::get, BoxError, Router,
 };
 use consts::*;
-use erye::{eyre::bail, Result};
+use erye::eyre::bail;
+use sea_orm::{Database, DatabaseConnection};
 use tokio::net::TcpListener;
 use tower::ServiceBuilder;
 use tower_http::trace::TraceLayer;
-
-use std::{borrow::Cow, net::SocketAddr, time::Duration};
 use tracing as t;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+
+use std::{borrow::Cow, net::SocketAddr, sync::Arc, time::Duration};
+
+/// Alias erye::Result
+pub(crate) type Result<E> = erye::Result<E>;
+
+pub struct AppState {
+    db: DatabaseConnection,
+}
 
 /// Configure and start the web server
 #[tokio::main]
@@ -21,8 +29,10 @@ async fn main() -> Result<()> {
     setup_tracing();
     erye::install()?;
 
+    let db = setup_database().await?;
     let listener = setup_address().await?;
-    let app = make_app();
+    let state = Arc::new(AppState { db });
+    let app = make_app(state);
 
     t::info!("Started server on {}", listener.local_addr().unwrap());
     axum::serve(listener, app).await?;
@@ -30,7 +40,7 @@ async fn main() -> Result<()> {
 }
 
 /// Define routes, layers, services
-fn make_app() -> Router {
+fn make_app(state: Arc<AppState>) -> Router {
     let common_middleware = ServiceBuilder::new()
         // Handle errors from middleware
         .layer(HandleErrorLayer::new(handle_errors))
@@ -44,8 +54,12 @@ fn make_app() -> Router {
         .layer(TraceLayer::new_for_http());
 
     Router::new()
-        .route("/", get(|| async move { "Hello from GET /" }))
+        .route(
+            "/",
+            get(|State(_state): State<Arc<AppState>>| async move { "Hello from GET /" }),
+        )
         .layer(common_middleware)
+        .with_state(state)
 }
 
 fn setup_env() {
@@ -97,6 +111,15 @@ async fn setup_address() -> Result<TcpListener> {
         return Ok(listener);
     }
     bail!("Failed to connect TcpListener to address = {address}");
+}
+
+async fn setup_database() -> Result<DatabaseConnection> {
+    let db_url = std::env::var(DATABASE_URL).expect("The .env file is missing DATABASE_URL");
+    t::debug!("Database URL = {db_url}");
+    let conn = Database::connect(db_url).await;
+    t::debug!("Database Connection = {conn:?}");
+    // Migrator::up(&conn, None).await.unwrap();
+    Ok(conn?)
 }
 
 /// Handle any kind of error from the middleware

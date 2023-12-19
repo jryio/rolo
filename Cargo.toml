@@ -32,5 +32,11 @@ sea-orm = { version = "0.12.10", features = [
   "runtime-tokio-rustls",
 ] }
 
+# When building inside Docker for alpine linux, we need to enable
+# the bundled version of sqlite with this dependency.
+#
+# Graph: sea-orm -> sea-query -> sqlx -> libsqlite3-sys
+libsqlite3-sys = { version = "*", features = ["bundled"] }
+
 [dev-dependencies]
 test-case = "3.3.1"

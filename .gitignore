@@ -12,5 +12,9 @@ tailwindcss
 # env files
 .env
 env
+.env.*
+env.*
 .env.dev
 env.dev
+.env.prod
+env.prod

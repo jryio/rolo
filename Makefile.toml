@@ -58,6 +58,7 @@ args = [
 
 [tasks.server-watch]
 command = "cargo"
+env = { RUST_LOG = "trace", RUST_BACKTRACE = "full" }
 args = ["watch", "-x", "r"]
 
 
@@ -90,23 +91,18 @@ args = ["build", "--release"]
 # Release
 # ------------------------
 [tasks.release]
-description = "Build the application for release and alpine linux (run inside Docker)"
+description = "Build the application for release (run inside Docker)"
 run_task = { name = ["styles", "rm-css", "server-release", "rename-release"] }
 
 [tasks.server-release]
 description = "Build the server for alpine (run inside Docker)"
-# RUSTFLAGS - We have to tell Cargo to use the gcc linker, otherwise it will try to use cc and fail
-# CC_x86_64_unknown_linux_musl -Tell Cargo which compoiler to use for building the `ring` dependency
-# AR_x86_64_unknown_linux_musl -Backup
-# CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS - Tell cargo to make this binary entirely statically linked
-env = { RUSTFLAGS = "-C linker=x86_64-linux-gnu-gcc", CC_x86_64_unknown_linux_musl = "clang", AR_x86_64_unknown_linux_musl = "llvm-ar", CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS = "-Clink-self-contained=yes -Clinker=rust-lld" }
 command = "cargo"
-args = ["build", "--release", "--target", "x86_64-unknown-linux-musl"]
+args = ["build", "--release"]
 
 [tasks.rename-release]
 description = "Rename the release binary (run inside Docker)"
 command = "mv"
-args = ["./target/x86_64-unknown-linux-musl/release/rolo", "./rolo"]
+args = ["./target/release/rolo", "./rolo"]
 
 [tasks.rm-css]
 description = "Remove input.css (run inside Docker)"
