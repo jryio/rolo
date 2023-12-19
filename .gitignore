@@ -1,7 +1,15 @@
+# sqlite database files
+*.db
+*.sqlite
+# rust build targets
 /target
+# Docker slim reports
 slim.report.json
+# Tailwindcss output
 static/styles.css
+# Tailwind css executable
 tailwindcss
+# env files
 .env
 env
 .env.dev

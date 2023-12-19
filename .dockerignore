@@ -1,4 +1,6 @@
 target
+static/styles.css
+tailwindcss
 **/target
 .git
 .env
