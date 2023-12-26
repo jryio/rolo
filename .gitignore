@@ -1,6 +1,8 @@
 # sqlite database files
 *.db
 *.sqlite
+# Testing files
+**/all-contacts.vcf
 # rust build targets
 /target
 # Docker slim reports
