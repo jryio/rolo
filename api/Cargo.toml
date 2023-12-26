@@ -41,9 +41,6 @@ erye = { package = "color-eyre", version = "0.6" }
 maud = { git = "https://github.com/vidhanio/maud.git", branch = "patch-1", features = [
   "axum",
 ] }
-vcard_parser = "0.2.1"
-ical = { version = "0.9.0", features = ["property"] }
-vcard4 = "0.4.4"
 
 
 [dev-dependencies]

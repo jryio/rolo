@@ -142,7 +142,6 @@ dependencies = [
  "color-eyre",
  "dotenvy",
  "entity",
- "ical",
  "libsqlite3-sys",
  "maud",
  "migration",
@@ -154,8 +153,6 @@ dependencies = [
  "tower-http",
  "tracing",
  "tracing-subscriber",
- "vcard4",
- "vcard_parser",
 ]
 
 [[package]]
@@ -1345,15 +1342,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ical"
-version = "0.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "26393c372d4c4d51616084afe36c0b44e4467febaa6f91f11f789094b4863bf9"
-dependencies = [
- "thiserror",
-]
-
-[[package]]
 name = "idna"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1442,12 +1430,6 @@ checksum = "0de8b303297635ad57c9f5059fd9cee7a47f8e8daa09df0fcd07dd39fb22977f"
 dependencies = [
  "log",
 ]
-
-[[package]]
-name = "language-tags"
-version = "0.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4345964bb142484797b161f473a503a434de77149dd8c7427788c6e13379388"
 
 [[package]]
 name = "lazy_static"
@@ -2883,6 +2865,9 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 [[package]]
 name = "storage"
 version = "0.1.0"
+dependencies = [
+ "vcard4",
+]
 
 [[package]]
 name = "stringprep"
@@ -3399,18 +3384,6 @@ dependencies = [
  "unicode-segmentation",
  "uriparse",
  "zeroize",
-]
-
-[[package]]
-name = "vcard_parser"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a143f5656b64cbc21506a7f29f1f9a1da836b991b1a7a8c5b7228f587abf9845"
-dependencies = [
- "language-tags",
- "nom",
- "time",
- "url",
 ]
 
 [[package]]
