@@ -1,0 +1,50 @@
+[package]
+name = "api"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# Local dependencies
+entity = { path = "../entity" }
+migration = { path = "../migration" }
+storage = { path = "../storage" }
+
+axum = { version = "0.7.2", features = ["macros"] }
+tokio = { version = "1.35.0", features = ["full"] }
+# "load-shed" provides load shedding to the services. "limit" provides
+# concurrent connect limiting to the services
+tower = { version = "0.4", features = [
+  "util",
+  "load-shed",
+  "limit",
+  "timeout",
+] }
+tower-http = { version = "0.5.0", features = ["fs", "trace"] }
+
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
+sea-orm = { workspace = true, features = [
+  "sqlx-sqlite",
+  "runtime-tokio-rustls",
+
+] }
+# When building inside Docker for alpine linux, we need to enable
+# the bundled version of sqlite with this dependency.
+#
+# Graph: sea-orm -> sea-query -> sqlx -> libsqlite3-sys
+libsqlite3-sys = { version = "*", features = ["bundled"] }
+dotenvy = "0.15.7"
+erye = { package = "color-eyre", version = "0.6" }
+# Trying Maud on a forked branch that claims to support axum 0.7
+maud = { git = "https://github.com/vidhanio/maud.git", branch = "patch-1", features = [
+  "axum",
+] }
+vcard_parser = "0.2.1"
+ical = { version = "0.9.0", features = ["property"] }
+vcard4 = "0.4.4"
+
+
+[dev-dependencies]
+test-case = "3.3.1"
