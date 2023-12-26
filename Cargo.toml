@@ -4,39 +4,30 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Jacob Young"]
 
-[dependencies]
-axum = { version = "0.7.2", features = ["macros"] }
-tokio = { version = "1.35.0", features = ["full"] }
-# Trying Maud on a forked branch that claims to support axum 0.7
-maud = { git = "https://github.com/vidhanio/maud.git", branch = "patch-1", features = [
-  "axum",
-] }
-# "load-shed" provides load shedding to the services. "limit" provides
-# concurrent connect limiting to the services
-tower = { version = "0.4", features = [
-  "util",
-  "load-shed",
-  "limit",
-  "timeout",
-] }
-tower-http = { version = "0.5.0", features = ["fs", "trace"] }
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-dotenvy = "0.15.7"
-erye = { package = "color-eyre", version = "0.6" }
-# For production we want to use tokio with RusTLS as our TLS library for full
-# static linking. The production image will be alpine, so our binary should be
-# fully statically linked
+[workspace]
+members = [
+  # Entrypoint
+  ".",
+  # Axum server
+  "api",
+  # Database functions
+  "storage",
+  # ORM Entities
+  "entity",
+  # ORM Migrations
+  "migration",
+]
+
+[workspace.dependencies]
 sea-orm = { version = "0.12.10", features = [
   "sqlx-sqlite",
   "runtime-tokio-rustls",
+  "with-time",
+  "debug-print",
 ] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
-# When building inside Docker for alpine linux, we need to enable
-# the bundled version of sqlite with this dependency.
-#
-# Graph: sea-orm -> sea-query -> sqlx -> libsqlite3-sys
-libsqlite3-sys = { version = "*", features = ["bundled"] }
 
-[dev-dependencies]
-test-case = "3.3.1"
+[dependencies]
+api = { path = "./api" }

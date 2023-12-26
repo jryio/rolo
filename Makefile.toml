@@ -1,5 +1,8 @@
 [config]
+# Don't use cargo-make's default tasks
 skip_core_tasks = true
+# Don't run tasks in every workspace by defautl
+default_to_workspace = false
 
 # ------------------------
 # HELP
@@ -14,14 +17,24 @@ args = ["make", "--list-all-steps", "--quiet"]
 # Install
 # ------------------------
 [tasks.install]
+category = "Install"
 description = "Install dependencies"
-dependencies = ["install-tailwind"]
+dependencies = ["install-tailwind", "install-sea"]
+
+
+[tasks.install-sea]
+category = "Install"
+description = "Installs sea-orm-cli"
+command = "cargo"
+args = ["install", "sea-orm-cli"]
 
 [tasks.install-tailwind]
+category = "Install"
 description = "Install tailwindcss"
 dependencies = ["download-tailwlind", "chmod-tailwind", "rename-tailwind"]
 
 [tasks.download-tailwlind]
+category = "Install"
 command = "curl"
 args = [
   "-sLO",
@@ -29,10 +42,12 @@ args = [
 ]
 
 [tasks.chmod-tailwind]
+category = "Install"
 command = "chmod"
 args = ["+x", "tailwindcss-macos-arm64"]
 
 [tasks.rename-tailwind]
+category = "Install"
 command = "mv"
 args = ["tailwindcss-macos-arm64", "tailwindcss"]
 
@@ -40,10 +55,12 @@ args = ["tailwindcss-macos-arm64", "tailwindcss"]
 # Development
 # ------------------------
 [tasks.watch]
+category = "Development"
 description = "Watch mode development"
 run_task = { name = ["server-watch", "styles-watch"], parallel = true }
 
 [tasks.styles-watch]
+category = "Development"
 description = "Run tailwindcss in watch mode"
 command = "./tailwindcss"
 args = [
@@ -57,6 +74,7 @@ args = [
 ]
 
 [tasks.server-watch]
+category = "Development"
 command = "cargo"
 env = { RUST_LOG = "trace", RUST_BACKTRACE = "full" }
 args = ["watch", "-x", "r"]
@@ -66,10 +84,12 @@ args = ["watch", "-x", "r"]
 # Build
 # ------------------------
 [tasks.build]
+category = "Build"
 description = "Build locally"
 run_task = { name = ["styles", "server"] }
 
 [tasks.styles]
+category = "Build"
 description = "Build tailwindcss for locally"
 command = "./tailwindcss"
 args = [
@@ -83,6 +103,7 @@ args = [
 ]
 
 [tasks.server]
+category = "Build"
 description = "Build the server for release locally"
 command = "cargo"
 args = ["build", "--release"]
@@ -91,20 +112,58 @@ args = ["build", "--release"]
 # Release
 # ------------------------
 [tasks.release]
+category = "Release"
 description = "Build the application for release (run inside Docker)"
 run_task = { name = ["styles", "rm-css", "server-release", "rename-release"] }
 
 [tasks.server-release]
+category = "Release"
 description = "Build the server for alpine (run inside Docker)"
 command = "cargo"
 args = ["build", "--release"]
 
 [tasks.rename-release]
+category = "Release"
 description = "Rename the release binary (run inside Docker)"
 command = "mv"
 args = ["./target/release/rolo", "./rolo"]
 
 [tasks.rm-css]
+category = "Release"
 description = "Remove input.css (run inside Docker)"
 command = "rm"
 args = ["static/input.css"]
+
+
+# ------------------------
+# Database
+# ------------------------
+[tasks.migrate]
+env_files = [
+  { path = ".env.dev", profile = "development" },
+  { path = ".env.docker", profile = "docker" },
+]
+category = "Database"
+description = "Run migration"
+command = "sea"
+args = ["migrate", "${@}"]
+
+
+[tasks.generate]
+env_files = [
+  { path = ".env.dev", profile = "development" },
+  { path = ".env.docker", profile = "docker" },
+]
+category = "Database"
+description = "Generate an entity"
+command = "sea"
+args = [
+  "generate",
+  "entity",
+  "--output-dir",
+  "./entity/src/entities",
+  "--with-serde",
+  "both",
+  "--date-time-crate",
+  "time",
+]
