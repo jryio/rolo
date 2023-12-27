@@ -27,13 +27,17 @@ impl MigrationTrait for Migration {
                             .primary_key(),
                     )
                     .col(
-                        ColumnDef::new(Contacts::Version)
-                            .string_len(3)
+                        ColumnDef::new(Contacts::Name)
+                            .string()
                             .not_null()
-                            .check(Expr::col(Contacts::Version).in_tuples(["2.0", "3.0", "4.0"])),
+                            .default(Expr::value("")),
                     )
-                    .col(ColumnDef::new(Contacts::Name).string().not_null())
-                    .col(ColumnDef::new(Contacts::FormatedName).string().not_null())
+                    .col(
+                        ColumnDef::new(Contacts::FormatedName)
+                            .string()
+                            .not_null()
+                            .default(Expr::value("")),
+                    )
                     // SeaORM treats time crate values as strings in the database
                     .col(ColumnDef::new(Contacts::Birthday).text())
                     // In sqlite BlobSize::Long is a NOOP
@@ -168,7 +172,6 @@ impl MigrationTrait for Migration {
 enum Contacts {
     Table,
     Id,
-    Version,
     Name,
     FormatedName,
     Birthday,
