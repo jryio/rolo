@@ -4,6 +4,10 @@ skip_core_tasks = true
 # Don't run tasks in every workspace by defautl
 default_to_workspace = false
 
+# profile based environment override
+[env.development]
+RUST_LOG = "trace"
+
 # ------------------------
 # HELP
 # ------------------------
@@ -62,8 +66,10 @@ run_task = { name = ["server-watch", "styles-watch"], parallel = true }
 [tasks.styles-watch]
 category = "Development"
 description = "Run tailwindcss in watch mode"
-command = "./tailwindcss"
+command = "bun"
 args = [
+  "run",
+  "tailwindcss",
   "--config",
   "tailwind.config.js",
   "--input",
@@ -79,6 +85,14 @@ command = "cargo"
 env = { RUST_LOG = "trace", RUST_BACKTRACE = "full" }
 args = ["watch", "-x", "r"]
 
+# ------------------------
+# Run
+# ------------------------
+[tasks.run]
+category = "Run"
+description = "Run the API server"
+command = "cargo"
+args = ["r"]
 
 # ------------------------
 # Build
@@ -91,8 +105,10 @@ run_task = { name = ["styles", "server"] }
 [tasks.styles]
 category = "Build"
 description = "Build tailwindcss for locally"
-command = "./tailwindcss"
+command = "bun"
 args = [
+  "run",
+  "tailwindcss",
   "--minify",
   "--config",
   "tailwind.config.js",

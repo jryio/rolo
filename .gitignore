@@ -1,3 +1,5 @@
+# Ignore JavaScript dependencies (TailwindCSS)
+node_modules
 # sqlite database files
 *.db
 *.sqlite

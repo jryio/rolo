@@ -2,12 +2,12 @@
 module.exports = {
   content: [
     // HTML template is done via Maud in Rust, so classes will be there
-    "./src/**/*.rs",
+    "./api/src/**/*.rs",
     // Optionally some static assets may have tailwind classes, look for those as well
-    "./static/**/*.{html,js}",
+    // "./static/**/*.{html,js}",
   ],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography"), require("daisyui")],
 };
