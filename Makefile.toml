@@ -166,6 +166,7 @@ args = [
   "both",
   "--date-time-crate",
   "time",
+  "--serde-skip-deserializing-primary-key",
 ]
 
 # ------------------------
