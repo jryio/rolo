@@ -7,3 +7,12 @@ edition = "2021"
 
 [dependencies]
 vcard4 = "0.4.4"
+entity = { path = "../entity" }
+sea-orm = { workspace = true, features = [
+  "sqlx-sqlite",
+  "runtime-tokio-rustls",
+  "with-time",
+  "debug-print",
+
+] }
+tokio = { workspace = true, features = ["full"] }

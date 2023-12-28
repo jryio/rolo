@@ -4,13 +4,12 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
-#[sea_orm(table_name = "contacts")]
+#[sea_orm(table_name = "contact")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
-    pub version: String,
     pub name: String,
-    pub formated_name: String,
+    pub formatted_name: String,
     pub birthday: Option<String>,
     #[sea_orm(column_type = "Binary(BlobSize::Blob(None))", nullable)]
     pub photo: Option<Vec<u8>>,
@@ -18,30 +17,30 @@ pub struct Model {
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_many = "super::contact_interactions::Entity")]
-    ContactInteractions,
-    #[sea_orm(has_many = "super::intervals::Entity")]
-    Intervals,
+    #[sea_orm(has_many = "super::contact_interaction::Entity")]
+    ContactInteraction,
+    #[sea_orm(has_many = "super::interval::Entity")]
+    Interval,
 }
 
-impl Related<super::contact_interactions::Entity> for Entity {
+impl Related<super::contact_interaction::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::ContactInteractions.def()
+        Relation::ContactInteraction.def()
     }
 }
 
-impl Related<super::intervals::Entity> for Entity {
+impl Related<super::interval::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Intervals.def()
+        Relation::Interval.def()
     }
 }
 
-impl Related<super::interactions::Entity> for Entity {
+impl Related<super::interaction::Entity> for Entity {
     fn to() -> RelationDef {
-        super::contact_interactions::Relation::Interactions.def()
+        super::contact_interaction::Relation::Interaction.def()
     }
     fn via() -> Option<RelationDef> {
-        Some(super::contact_interactions::Relation::Contacts.def().rev())
+        Some(super::contact_interaction::Relation::Contact.def().rev())
     }
 }
 

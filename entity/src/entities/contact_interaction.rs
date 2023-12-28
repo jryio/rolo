@@ -4,7 +4,7 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
-#[sea_orm(table_name = "contact_interactions")]
+#[sea_orm(table_name = "contact_interaction")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub contact_id: i32,
@@ -15,32 +15,32 @@ pub struct Model {
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(
-        belongs_to = "super::contacts::Entity",
+        belongs_to = "super::contact::Entity",
         from = "Column::ContactId",
-        to = "super::contacts::Column::Id",
+        to = "super::contact::Column::Id",
         on_update = "Cascade",
         on_delete = "Cascade"
     )]
-    Contacts,
+    Contact,
     #[sea_orm(
-        belongs_to = "super::interactions::Entity",
+        belongs_to = "super::interaction::Entity",
         from = "Column::InteractionId",
-        to = "super::interactions::Column::Id",
+        to = "super::interaction::Column::Id",
         on_update = "Cascade",
         on_delete = "Cascade"
     )]
-    Interactions,
+    Interaction,
 }
 
-impl Related<super::contacts::Entity> for Entity {
+impl Related<super::contact::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Contacts.def()
+        Relation::Contact.def()
     }
 }
 
-impl Related<super::interactions::Entity> for Entity {
+impl Related<super::interaction::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Interactions.def()
+        Relation::Interaction.def()
     }
 }
 

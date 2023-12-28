@@ -167,3 +167,16 @@ args = [
   "--date-time-crate",
   "time",
 ]
+
+# ------------------------
+# Tests
+# ------------------------
+[tasks.test-all]
+env_files = [
+  { path = ".env.dev", profile = "development" },
+  { path = ".env.docker", profile = "docker" },
+]
+category = "Tests"
+description = "Run tests in all crates"
+command = "cargo"
+args = ["pt", "--workspace"]

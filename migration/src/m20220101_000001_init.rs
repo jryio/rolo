@@ -13,56 +13,56 @@ pub struct Migration;
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            // Contacts Table
+            // Contact Table
             .create_table(
                 Table::create()
-                    .table(Contacts::Table)
+                    .table(Contact::Table)
                     .if_not_exists()
                     // ID
                     .col(
-                        ColumnDef::new(Contacts::Id)
+                        ColumnDef::new(Contact::Id)
                             .integer()
                             .not_null()
                             .auto_increment()
                             .primary_key(),
                     )
                     .col(
-                        ColumnDef::new(Contacts::Name)
+                        ColumnDef::new(Contact::Name)
                             .string()
                             .not_null()
                             .default(Expr::value("")),
                     )
                     .col(
-                        ColumnDef::new(Contacts::FormatedName)
+                        ColumnDef::new(Contact::FormattedName)
                             .string()
                             .not_null()
                             .default(Expr::value("")),
                     )
                     // SeaORM treats time crate values as strings in the database
-                    .col(ColumnDef::new(Contacts::Birthday).text())
+                    .col(ColumnDef::new(Contact::Birthday).text())
                     // In sqlite BlobSize::Long is a NOOP
-                    .col(ColumnDef::new(Contacts::Photo).blob(BlobSize::Long))
+                    .col(ColumnDef::new(Contact::Photo).blob(BlobSize::Long))
                     .to_owned(),
             )
             .await?;
 
         manager
-            // Interactions Table
+            // Interaction Table
             .create_table(
                 Table::create()
-                    .table(Interactions::Table)
+                    .table(Interaction::Table)
                     .if_not_exists()
                     .col(
-                        ColumnDef::new(Interactions::Id)
+                        ColumnDef::new(Interaction::Id)
                             .integer()
                             .not_null()
                             .auto_increment()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(Interactions::DateTime).text().not_null())
-                    .col(ColumnDef::new(Interactions::Description).text())
-                    .col(ColumnDef::new(Interactions::Type).text().not_null().check(
-                        Expr::col(Interactions::Type).in_tuples([
+                    .col(ColumnDef::new(Interaction::DateTime).text().not_null())
+                    .col(ColumnDef::new(Interaction::Description).text())
+                    .col(ColumnDef::new(Interaction::Type).text().not_null().check(
+                        Expr::col(Interaction::Type).in_tuples([
                             "phone",
                             "video",
                             "in-person",
@@ -74,67 +74,64 @@ impl MigrationTrait for Migration {
             .await?;
 
         manager
-            // Intervals Table
+            // Interval Table
             .create_table(
                 Table::create()
-                    .table(Intervals::Table)
+                    .table(Interval::Table)
                     .if_not_exists()
                     .col(
-                        ColumnDef::new(Intervals::Id)
+                        ColumnDef::new(Interval::Id)
                             .integer()
                             .not_null()
                             .auto_increment()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(Intervals::Interval).text().not_null())
-                    .col(ColumnDef::new(Intervals::ContactId).integer().not_null())
+                    .col(ColumnDef::new(Interval::Interval).text().not_null())
+                    .col(ColumnDef::new(Interval::ContactId).integer().not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("interval_to_contact")
-                            .from(Intervals::Table, Intervals::ContactId)
-                            .to(Contacts::Table, Contacts::Id),
+                            .from(Interval::Table, Interval::ContactId)
+                            .to(Contact::Table, Contact::Id),
                     )
                     .to_owned(),
             )
             .await?;
 
         manager
-            // ContactInteractions Table
+            // ContactInteraction Table
             .create_table(
                 Table::create()
-                    .table(ContactInteractions::Table)
+                    .table(ContactInteraction::Table)
                     .if_not_exists()
                     .col(
-                        ColumnDef::new(ContactInteractions::ContactId)
+                        ColumnDef::new(ContactInteraction::ContactId)
                             .integer()
                             .not_null(),
                     )
                     .col(
-                        ColumnDef::new(ContactInteractions::InteractionId)
+                        ColumnDef::new(ContactInteraction::InteractionId)
                             .integer()
                             .not_null(),
                     )
                     .primary_key(
                         Index::create()
-                            .col(ContactInteractions::ContactId)
-                            .col(ContactInteractions::InteractionId),
+                            .col(ContactInteraction::ContactId)
+                            .col(ContactInteraction::InteractionId),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("contact_interactions_to_contact")
-                            .from(ContactInteractions::Table, ContactInteractions::ContactId)
-                            .to(Contacts::Table, Contacts::Id)
+                            .from(ContactInteraction::Table, ContactInteraction::ContactId)
+                            .to(Contact::Table, Contact::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("contact_interactions_to_interactions")
-                            .from(
-                                ContactInteractions::Table,
-                                ContactInteractions::InteractionId,
-                            )
-                            .to(Interactions::Table, Interactions::Id)
+                            .from(ContactInteraction::Table, ContactInteraction::InteractionId)
+                            .to(Interaction::Table, Interaction::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
@@ -150,18 +147,18 @@ impl MigrationTrait for Migration {
         // todo!();
 
         manager
-            .drop_table(Table::drop().table(Contacts::Table).to_owned())
+            .drop_table(Table::drop().table(Contact::Table).to_owned())
             .await?;
         manager
-            .drop_table(Table::drop().table(Interactions::Table).to_owned())
-            .await?;
-
-        manager
-            .drop_table(Table::drop().table(Intervals::Table).to_owned())
+            .drop_table(Table::drop().table(Interaction::Table).to_owned())
             .await?;
 
         manager
-            .drop_table(Table::drop().table(ContactInteractions::Table).to_owned())
+            .drop_table(Table::drop().table(Interval::Table).to_owned())
+            .await?;
+
+        manager
+            .drop_table(Table::drop().table(ContactInteraction::Table).to_owned())
             .await?;
 
         Ok(())
@@ -169,17 +166,17 @@ impl MigrationTrait for Migration {
 }
 
 #[derive(DeriveIden)]
-enum Contacts {
+enum Contact {
     Table,
     Id,
     Name,
-    FormatedName,
+    FormattedName,
     Birthday,
     Photo,
 }
 
 #[derive(DeriveIden)]
-pub enum Interactions {
+pub enum Interaction {
     Table,
     Id,
     DateTime,
@@ -188,15 +185,16 @@ pub enum Interactions {
 }
 
 #[derive(DeriveIden)]
-pub enum Intervals {
+pub enum Interval {
     Table,
     Id,
     ContactId,
     Interval,
 }
 
+/// This is a junction table between Contact <> Interaction
 #[derive(DeriveIden)]
-pub enum ContactInteractions {
+pub enum ContactInteraction {
     Table,
     ContactId,
     InteractionId,

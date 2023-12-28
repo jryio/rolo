@@ -2,6 +2,7 @@
 
 pub mod prelude;
 
-pub mod contact_interactions;
-pub mod interactions;
-pub mod intervals;
+pub mod contact;
+pub mod contact_interaction;
+pub mod interaction;
+pub mod interval;

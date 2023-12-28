@@ -6,13 +6,20 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# Workspace dependencies
+tokio = { workspace = true, features = ["full"] }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
+sea-orm = { workspace = true, features = [
+  "sqlx-sqlite",
+  "runtime-tokio-rustls",
+] }
+
 # Local dependencies
 entity = { path = "../entity" }
 migration = { path = "../migration" }
 storage = { path = "../storage" }
-
 axum = { version = "0.7.2", features = ["macros"] }
-tokio = { version = "1.35.0", features = ["full"] }
 # "load-shed" provides load shedding to the services. "limit" provides
 # concurrent connect limiting to the services
 tower = { version = "0.4", features = [
@@ -23,13 +30,6 @@ tower = { version = "0.4", features = [
 ] }
 tower-http = { version = "0.5.0", features = ["fs", "trace"] }
 
-tracing = { workspace = true }
-tracing-subscriber = { workspace = true, features = ["env-filter"] }
-sea-orm = { workspace = true, features = [
-  "sqlx-sqlite",
-  "runtime-tokio-rustls",
-
-] }
 # When building inside Docker for alpine linux, we need to enable
 # the bundled version of sqlite with this dependency.
 #

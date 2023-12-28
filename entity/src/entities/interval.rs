@@ -4,7 +4,7 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
-#[sea_orm(table_name = "intervals")]
+#[sea_orm(table_name = "interval")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
@@ -15,18 +15,18 @@ pub struct Model {
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(
-        belongs_to = "super::contacts::Entity",
+        belongs_to = "super::contact::Entity",
         from = "Column::ContactId",
-        to = "super::contacts::Column::Id",
+        to = "super::contact::Column::Id",
         on_update = "NoAction",
         on_delete = "NoAction"
     )]
-    Contacts,
+    Contact,
 }
 
-impl Related<super::contacts::Entity> for Entity {
+impl Related<super::contact::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Contacts.def()
+        Relation::Contact.def()
     }
 }
 
