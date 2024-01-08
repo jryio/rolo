@@ -19,7 +19,9 @@ sea-orm = { workspace = true, features = [
 entity = { path = "../entity" }
 migration = { path = "../migration" }
 storage = { path = "../storage" }
-axum = { version = "0.7.2", features = ["macros"] }
+# axum mutlipart is for file uploads
+axum = { version = "0.7.2", features = ["macros", "multipart"] }
+axum-htmx = "0.5.0"
 # "load-shed" provides load shedding to the services. "limit" provides
 # concurrent connect limiting to the services
 tower = { version = "0.4", features = [
@@ -38,9 +40,7 @@ libsqlite3-sys = { version = "*", features = ["bundled"] }
 dotenvy = "0.15.7"
 erye = { package = "color-eyre", version = "0.6" }
 # Trying Maud on a forked branch that claims to support axum 0.7
-maud = { git = "https://github.com/vidhanio/maud.git", branch = "patch-1", features = [
-  "axum",
-] }
+maud = { version = "0.26", features = ["axum"] }
 
 
 [dev-dependencies]

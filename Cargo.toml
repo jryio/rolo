@@ -24,7 +24,6 @@ sea-orm = { version = "0.12.10", features = [
   "sqlx-sqlite",
   "runtime-tokio-rustls",
   "with-time",
-  "debug-print",
 ] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }

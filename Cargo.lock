@@ -139,6 +139,7 @@ name = "api"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "axum-htmx",
  "color-eyre",
  "dotenvy",
  "entity",
@@ -392,7 +393,7 @@ dependencies = [
  "axum-macros",
  "bytes",
  "futures-util",
- "http",
+ "http 1.0.0",
  "http-body",
  "http-body-util",
  "hyper",
@@ -401,6 +402,7 @@ dependencies = [
  "matchit",
  "memchr",
  "mime",
+ "multer",
  "percent-encoding",
  "pin-project-lite",
  "rustversion",
@@ -424,7 +426,7 @@ dependencies = [
  "async-trait",
  "bytes",
  "futures-util",
- "http",
+ "http 1.0.0",
  "http-body",
  "http-body-util",
  "mime",
@@ -433,6 +435,17 @@ dependencies = [
  "sync_wrapper",
  "tower-layer",
  "tower-service",
+]
+
+[[package]]
+name = "axum-htmx"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "40f7051fdc094b6e5ea06cab9bca4b198c54dee4472a9419155f0ff19f19901e"
+dependencies = [
+ "async-trait",
+ "axum-core",
+ "http 1.0.0",
 ]
 
 [[package]]
@@ -848,6 +861,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "encoding_rs"
+version = "0.8.33"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7268b386296a025e474d5140678f75d6de9493ae55a5d709eeb9dd08149945e1"
+dependencies = [
+ "cfg-if",
+]
+
+[[package]]
 name = "entity"
 version = "0.1.0"
 dependencies = [
@@ -1143,7 +1165,7 @@ dependencies = [
  "futures-core",
  "futures-sink",
  "futures-util",
- "http",
+ "http 1.0.0",
  "indexmap",
  "slab",
  "tokio",
@@ -1229,6 +1251,17 @@ dependencies = [
 
 [[package]]
 name = "http"
+version = "0.2.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8947b1a6fad4393052c7ba1f4cd97bed3e953a95c79c92ad9b051a04611d9fbb"
+dependencies = [
+ "bytes",
+ "fnv",
+ "itoa",
+]
+
+[[package]]
+name = "http"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b32afd38673a8016f7c9ae69e5af41a58f81b1d31689040f2f1959594ce194ea"
@@ -1245,7 +1278,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1cac85db508abc24a2e48553ba12a996e87244a0395ce011e62b37158745d643"
 dependencies = [
  "bytes",
- "http",
+ "http 1.0.0",
 ]
 
 [[package]]
@@ -1256,7 +1289,7 @@ checksum = "41cb79eb393015dadd30fc252023adb0b2400a0caee0fa2a077e6e21a551e840"
 dependencies = [
  "bytes",
  "futures-util",
- "http",
+ "http 1.0.0",
  "http-body",
  "pin-project-lite",
 ]
@@ -1289,7 +1322,7 @@ dependencies = [
  "futures-channel",
  "futures-util",
  "h2",
- "http",
+ "http 1.0.0",
  "http-body",
  "httparse",
  "httpdate",
@@ -1307,7 +1340,7 @@ dependencies = [
  "bytes",
  "futures-channel",
  "futures-util",
- "http",
+ "http 1.0.0",
  "http-body",
  "hyper",
  "pin-project-lite",
@@ -1534,19 +1567,21 @@ checksum = "0e7465ac9959cc2b1404e8e2367b43684a6d13790fe23056cc8c6c5a6b7bcb94"
 
 [[package]]
 name = "maud"
-version = "0.25.0"
-source = "git+https://github.com/vidhanio/maud.git?branch=patch-1#fb77d399d001a345f3a369eb2c7a12da243376a6"
+version = "0.26.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "df518b75016b4289cdddffa1b01f2122f4a49802c93191f3133f6dc2472ebcaa"
 dependencies = [
  "axum-core",
- "http",
+ "http 1.0.0",
  "itoa",
  "maud_macros",
 ]
 
 [[package]]
 name = "maud_macros"
-version = "0.25.0"
-source = "git+https://github.com/vidhanio/maud.git?branch=patch-1#fb77d399d001a345f3a369eb2c7a12da243376a6"
+version = "0.26.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fa453238ec218da0af6b11fc5978d3b5c3a45ed97b722391a2a11f3306274e18"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
@@ -1620,6 +1655,24 @@ dependencies = [
  "libc",
  "wasi",
  "windows-sys 0.48.0",
+]
+
+[[package]]
+name = "multer"
+version = "2.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "01acbdc23469fd8fe07ab135923371d5f5a422fbf9c522158677c8eb15bc51c2"
+dependencies = [
+ "bytes",
+ "encoding_rs",
+ "futures-util",
+ "http 0.2.11",
+ "httparse",
+ "log",
+ "memchr",
+ "mime",
+ "spin 0.9.8",
+ "version_check",
 ]
 
 [[package]]
@@ -3165,7 +3218,7 @@ dependencies = [
  "bitflags 2.4.1",
  "bytes",
  "futures-util",
- "http",
+ "http 1.0.0",
  "http-body",
  "http-body-util",
  "http-range-header",

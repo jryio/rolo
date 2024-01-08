@@ -1,6 +1,7 @@
 # Ignore JavaScript dependencies (TailwindCSS)
 node_modules
 # sqlite database files
+db
 *.db
 *.sqlite
 # Testing files
